@@ -1,0 +1,18 @@
+== Ruby Library Various APIs
+
+This is an attempt to make integrating easier with various Email Service Providers (ESP) APIs.
+
+- Exact Target: http://www.exacttarget.com/
+- Exact Target XML API: http://wiki.memberlandingpages.com/API_References/XML_API
+- Exact Target Web Service API: http://wiki.memberlandingpages.com/API_References/Web_Service_Guide
+
+== Available ESPs
+
+Exact Target
+- Exact Target: http://www.exacttarget.com/
+
+Vertical Response
+- Coming Soon
+
+Mail Chimp
+- Coming Soon
