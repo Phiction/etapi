@@ -4,12 +4,12 @@ require "esp-apis/version"
 
 Gem::Specification.new do |s|
   s.name        = "esp-apis"
-  s.version     = Esp::Apis::VERSION
+  s.version     = ESP::VERSION
   s.authors     = ["Chris McGrath"]
   s.email       = ["mcgrath.chris@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Ruby Library for Various Email Service Provider APIs}
+  s.description = %q{This is an attempt to make integrating easier with various Email Service Provider (ESP) APIs.}
 
   s.rubyforge_project = "esp-apis"
 

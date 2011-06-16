@@ -1,10 +1,6 @@
-== Ruby Library Various APIs
+== Ruby Library for Various Email Service Provider (ESP) APIs
 
-This is an attempt to make integrating easier with various Email Service Providers (ESP) APIs.
-
-- Exact Target: http://www.exacttarget.com/
-- Exact Target XML API: http://wiki.memberlandingpages.com/API_References/XML_API
-- Exact Target Web Service API: http://wiki.memberlandingpages.com/API_References/Web_Service_Guide
+This is an attempt to make integrating easier with various Email Service Provider (ESP) APIs.
 
 == Available ESPs
 
