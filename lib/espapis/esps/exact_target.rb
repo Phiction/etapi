@@ -1,3 +1,4 @@
+
 require("erb")
 include ERB::Util
 
@@ -44,6 +45,7 @@ module ESP
         io << render('status')
       end
       ESP::Error.check_response_error(response)
+      
       doc = Nokogiri::XML::Document.parse(response.read_body)
       @current_status = doc.xpath("//Ping").text
     end

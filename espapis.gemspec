@@ -13,7 +13,10 @@ Gem::Specification.new do |s|
   s.description = %q{This is an attempt to make integrating easier with various Email Service Provider (ESP) APIs.}
 
   s.rubyforge_project = "espapis"
-
+  
+  s.add_dependency("builder",  ">= 2.1.2")
+  s.add_dependency("nokogiri", ">= 1.4.1")
+  
   s.files         = `git ls-files`.split("\n")
   s.require_path  = "lib"
 end
