@@ -1,4 +1,6 @@
-require "logger"
+require("logger")
+require("active_support/core_ext/object/blank")
+require("net/https")
 
 module ESP
   module Global
@@ -29,7 +31,7 @@ module ESP
     
     # Logs a given +message+.
     def log(message)
-     logger.send log_level, message if log?
+     logger.send(log_level, "\n\n#{message}\n\n") if log?
     end
     
     # Sets whether to raise HTTP errors and SOAP faults.
