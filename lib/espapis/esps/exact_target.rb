@@ -43,7 +43,7 @@ module ESP
       response = send do |io|
         io << render('status')
       end
-      Error.check_response_error(response)
+      ESP::Error.check_response_error(response)
       doc = Nokogiri::XML::Document.parse(response.read_body)
       @current_status = doc.xpath("//Ping").text
     end

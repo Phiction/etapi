@@ -1,4 +1,4 @@
-module RBET
+module ESP
   class Error < RuntimeError
     attr_reader :code, :message
     def initialize(error_code,error_msg)

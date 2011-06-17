@@ -1,4 +1,5 @@
 require("espapis/global")
+require("espapis/error")
 require("espapis/esps/exact_target")
 require("builder")
 
