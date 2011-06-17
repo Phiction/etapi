@@ -1,6 +1,6 @@
 require("espapis/global")
-require("espapis/template")
 require("espapis/esps/exact_target")
+require("builder")
 
 module ESP
   extend Global
