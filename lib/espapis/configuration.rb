@@ -1,53 +1,43 @@
 require("logger")
-require("active_support/core_ext/object/blank")
-require("net/https")
 
 module ESP
-  module Global
+  module Configuration
     
-    # Sets whether to log HTTP requests.
-    attr_writer :log
+    # Creates ESP.log = {value}
+    attr_writer(:log)
     
-    # Returns whether to log HTTP requests. Defaults to +true+.
+    # Returns whether to log. (true)
     def log?
      @log != false
     end
     
-    # Sets the logger to use.
-    attr_writer :logger
+    # Creates ESP.logger = {value}
+    attr_writer(:logger)
     
-    # Returns the logger. Defaults to an instance of +Logger+ writing to STDOUT.
+    # Returns the logger. (::Logger.new(STDOUT))
     def logger
-      @logger ||= ::Logger.new STDOUT
+      @logger ||= ::Logger.new(STDOUT)
     end
     
-    # Sets the log level.
-    attr_writer :log_level
+    # Creates ESP.log_level = {value}
+    attr_writer(:log_level)
     
-    # Returns the log level. Defaults to :debug.
+    # Returns the log level. (:debug)
     def log_level
       @log_level ||= :debug
     end
     
-    # Logs a given +message+.
+    # Logs the passed message.
     def log(message)
      logger.send(log_level, "\n\n#{message}\n\n") if log?
     end
     
-    # Sets whether to raise HTTP errors and SOAP faults.
-    attr_writer :raise_errors
+    # Creates ESP.log = {value}
+    attr_writer(:raise_errors)
     
-    # Returns whether to raise errors. Defaults to +true+.
+    # Returns whether to raise errors. (true)
     def raise_errors?
       @raise_errors != false
-    end
-    
-    # Sets whether to enable ExactTarget
-    attr_writer :exact_target_enabled
-    
-    # Sets whether ExactTarget is enabled or not
-    def exact_target_enabled?
-      @exact_target_enabled != false
     end
     
   end
