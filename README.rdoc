@@ -2,15 +2,6 @@
 
 This is an attempt to make integrating easier with various Email Service Provider (ESP) APIs.
 
-Installation
-------------
-
-Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
-
-```
-$ gem install savon
-```
-
 == Available ESPs
 
 Exact Target
