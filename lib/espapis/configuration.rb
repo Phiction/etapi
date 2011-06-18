@@ -1,7 +1,16 @@
 require("logger")
+require("net/https")
+require("espapis/esps/exact_target")
 
 module ESP
   module Configuration
+    
+    attr_accessor(
+      :exact_target_username,
+      :exact_target_password,
+      :exact_target_api_method,
+      :exact_target_use_s4
+    )
     
     # Creates ESP.log = {value}
     attr_writer(:log)

@@ -1,0 +1,14 @@
+<system>
+  <system_name>subscriber</system_name>
+  <action>add</action>
+  <search_type>listid</search_type>
+  <search_value>1234</search_value>
+  <search_value2></search_value2>
+  <values>
+    <Email__Address>test.person@example.com</Email__Address>
+    <status>active</status>
+    <Full__Name>Test Person</Full__Name>
+    <ChannelMemberID>5678</ChannelMemberID>
+  </values>
+  <update>true</update>
+</system>
