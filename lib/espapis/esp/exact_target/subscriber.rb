@@ -4,11 +4,12 @@ module ESP
     
     def subscriber_add(*args)
       
+      # options
       options         = args.extract_options!
       @list_id        = options[:list_id]
       @email          = options[:email]
       @full_name      = options[:full_name]
-      @attributes     = options[:attributes]
+      @attributes     = options[:attributes] ||= []
       @account_id     = options[:account_id]
       
       # check for required options
@@ -19,31 +20,45 @@ module ESP
       
       # convert options
       @list_id = @list_id.to_i
-      template_path = @api_method.to_s + '_' + __method__.to_s
       
-      # build xml file
+      # build xml data
       data = ""
       xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-      xml.system do
-        xml.system_name "subscriber"
-        xml.action "add"
-        xml.search_type "listid"
-        xml.search_value @list_id
-        xml.search_value2 nil
-        xml.values do
-          xml.Email__Address @email
-          xml.status "active"
-          @attributes.each do|name, value|
-            eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
-          end
+      xml.instruct!
+      xml.exacttarget do
+        xml.authorization do
+          xml.username @username
+          xml.password @password
         end
-        xml.update true
+        xml.system do
+          xml.system_name "subscriber"
+          xml.action "add"
+          xml.search_type "listid"
+          xml.search_value @list_id
+          xml.search_value2 nil
+          xml.values do
+            xml.Email__Address @email
+            xml.status "active"
+            @attributes.each do|name, value|
+              eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
+            end
+          end
+          xml.update true
+        end
       end
       
-      ESP.log(data)
+      data_encoded = "qf=xml&xml=" + url_encode(data)
+      
+      response = @api_url.post( @api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s) )
+      doc = Nokogiri::XML::Document.parse( response.read_body )
+      
+      ESP.log(doc)
       
     end
     
+    def subscriber_delete_from_list(*args)
+      
+    end
     
   end
   

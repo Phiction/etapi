@@ -1,7 +1,12 @@
-require("logger")
 require("erb")
+require("uri")
+require("logger")
+require("builder")
+require("nokogiri")
 require("net/https")
 require("espapis/esp/exact_target")
+
+include(ERB::Util)
 
 module ESP
   module Configuration
@@ -39,7 +44,7 @@ module ESP
     
     # Logs the passed message.
     def log(message)
-     logger.send(log_level, "\n\n#{message}\n\n") if log?
+     logger.send(log_level, "\n#{message}\n") if log?
     end
     
     # Creates ESP.log = {value}

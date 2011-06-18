@@ -13,8 +13,6 @@ module ESP
       :api_uri_soap         => "https://webservice.exacttarget.com/etframework.wsdl",
       :api_uri_soap_s4      => "https://webservice.s4.exacttarget.com/etframework.wsdl",
       :use_ssl              => true,
-      :header_content_type  => "application/x-www-form-urlencoded",
-      :header_connection    => "close"
     }
     
     # allowed options
@@ -30,6 +28,7 @@ module ESP
       @password   = options[:password]    ||= ESP.exact_target_password
       @api_method = options[:api_method]  ||= ESP.exact_target_api_method ||= DEFAULTS[:api_method]
       @use_s4     = options[:use_s4]      ||= ESP.exact_target_use_s4     ||= DEFAULTS[:use_s4]
+      @headers    = {"Content-Type" => "application/x-www-form-urlencoded", "Connection" => "close"}
       
       # check for required options
       raise ArgumentError, "* missing :username *" if @username.blank?
@@ -53,12 +52,6 @@ module ESP
       
       # check for SSL (disabled)
       @api_url.use_ssl = options[:use_ssl] ||= DEFAULTS[:use_ssl]
-      
-      # set headers
-      @headers = {
-        'Content-Type'  => DEFAULTS[:header_content_type],
-        'Connection'    => DEFAULTS[:header_connection]
-      }
       
     end
     
