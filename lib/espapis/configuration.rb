@@ -1,5 +1,6 @@
 require("logger")
 require("net/https")
+require("espapis/render")
 require("espapis/esps/exact_target")
 
 module ESP

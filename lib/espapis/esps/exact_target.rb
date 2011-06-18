@@ -1,3 +1,5 @@
+require("espapis/esps/exact_target/subscriber")
+
 module ESP
   
   class ExactTarget
@@ -29,7 +31,7 @@ module ESP
       @api_method = options[:api_method]  ||= ESP.exact_target_api_method ||= DEFAULTS[:api_method]
       @use_s4     = options[:use_s4]      ||= ESP.exact_target_use_s4     ||= DEFAULTS[:use_s4]
       
-      # check for :username and :password
+      # check for required options
       raise ArgumentError, "* missing :username *" if @username.blank?
       raise ArgumentError, "* missing :password *" if @password.blank?
       raise ArgumentError, "* invalid :api_method | options => [:xml, :soap] *" unless ALLOWED_API_METHOD_OPTIONS.include?(@api_method.to_sym)
@@ -54,13 +56,11 @@ module ESP
       
       # set headers
       @headers = {
-        'Content-Type' => DEFAULTS[:header_content_type],
-        'Connection' => DEFAULTS[:header_connection]
+        'Content-Type'  => DEFAULTS[:header_content_type],
+        'Connection'    => DEFAULTS[:header_connection]
       }
       
     end
-    
-    
     
   end
   
