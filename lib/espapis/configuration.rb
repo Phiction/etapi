@@ -1,7 +1,7 @@
 require("logger")
+require("erb")
 require("net/https")
-require("espapis/render")
-require("espapis/esps/exact_target")
+require("espapis/esp/exact_target")
 
 module ESP
   module Configuration

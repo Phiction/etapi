@@ -4,8 +4,6 @@ module ESP
   
   class ExactTarget
     
-    include ESP::Render
-    
     # set default options
     DEFAULTS = {
       :api_method           => :xml,
