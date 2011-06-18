@@ -1,7 +1,6 @@
 module ESP
   
   class ExactTarget
-    extend Render
     
     def subscriber_add(*args)
       
@@ -18,9 +17,10 @@ module ESP
       
       # convert options
       list_id = list_id.to_i
-      template = @api_method.to_s + '_' + __method__.to_s
+      template_path = @api_method.to_s + '_' + __method__.to_s
       
-      ESP.log(template)
+      render_xml_template(template_path)
+      
       
     end
     

@@ -1,8 +1,10 @@
-require("espapis/esps/exact_target/subscriber")
+require("espapis/esp/exact_target/subscriber")
 
 module ESP
   
   class ExactTarget
+    
+    include ESP::Render
     
     # set default options
     DEFAULTS = {
