@@ -50,6 +50,15 @@ session.subscriber_add(
 )
 ```
 
+### Delete From List
+
+```ruby
+session.subscriber_delete_from_list(
+	:list_id    => 12345,
+	:email      => 'test@test.com'
+)
+```
+
 TODO
 ====
 
