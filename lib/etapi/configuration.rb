@@ -4,6 +4,7 @@ require("logger")
 require("builder")
 require("nokogiri")
 require("net/https")
+require("etapi/error")
 require("etapi/exact_target")
 
 include(ERB::Util)

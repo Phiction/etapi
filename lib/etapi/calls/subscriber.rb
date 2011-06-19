@@ -51,6 +51,7 @@ module ETAPI
       
       response = @api_url.post( @api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s) )
       doc = Nokogiri::XML::Document.parse( response.read_body )
+      check_response(response)
       
       ETAPI.log(doc)
       
