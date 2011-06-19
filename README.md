@@ -47,7 +47,7 @@ Subscribers
 ```ruby
 session.subscriber_add(
 	:email      => 'test@test.com',
-	:list_id    => 12345, # optional if using api_method == :soap
+	:list_id    => 12345, # optional if api_method == :soap
 	:account_id => 67890 # optional if :using_s4,
 	:attributes => {
 		"Full Name" => "Test User",
@@ -57,16 +57,32 @@ session.subscriber_add(
 => 1234567890 # subscriber_id
 ```
 
-### Edit
+### Edit With `:sbuscriber_id`
+* Available methods `:xml`
+* The subscriber will be added to the parent account if using s4 and :account_id is blank
+
 ```ruby
 session.subscriber_edit(
-	:subscriber_id => 12345, # must include if finding by subscriber_id
-	:list_id       => 12345, # must include if finding by list_id and email
-	:email         => 'test@test.com', # must include if finding by list_id and email
-	:account_id    => 1044867, # must include if using s4
+	:subscriber_id => 12345,
+	:account_id    => 67890, # optional if :using_s4
 	:attributes    => {
-		'Email__Address' => 'test1@test.com',
-		'First__Name'    => 'Test'
+		'Email Address' => 'test1@test.com',
+		'First Name'    => 'Test'
+	}
+)
+```
+
+### Edit With `:list_id`, `:email`
+* Available methods `:xml`
+
+```ruby
+session.subscriber_edit(
+	:list_id       => 12345,
+	:email         => 'test@test.com',
+	:account_id    => 67890, # optional if :using_s4
+	:attributes    => {
+		'Email Address' => 'test1@test.com',
+		'First Name'    => 'Test'
 	}
 )
 ```
@@ -100,6 +116,7 @@ Subscribers
 
 Code
 ----
+* Clean UPPPP
 * Rework XML generation
 * Merge subscriber_delete and subscriber_delete_from_list
 * Add example with attributes for subscriber_add and subsciber_edit
