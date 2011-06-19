@@ -39,7 +39,7 @@ session = ETAPI::Session.new(
 Subscribers
 -----------
 
-### Add
+### Add (`:xml`, `:soap`)
 ```ruby
 session.subscriber_add(
 	:list_id    => 12345,
@@ -83,8 +83,6 @@ TODO
 
 Subscribers
 -----------
-
-* Add [:soap]
 * Delete [:soap]
 * Delete From List [:soap]
 * Edit [:soap]
@@ -98,3 +96,4 @@ Code
 * Merge subscriber_delete and subscriber_delete_from_list
 * Add example with attributes for subscriber_add and subsciber_edit
 * Fix subscriber_add account_id
+* list_id is not required for subscriber_add

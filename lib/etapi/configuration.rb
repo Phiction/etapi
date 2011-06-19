@@ -1,5 +1,6 @@
 require("erb")
 require("uri")
+require("savon")
 require("logger")
 require("builder")
 require("nokogiri")
@@ -16,7 +17,8 @@ module ETAPI
       :username,
       :password,
       :api_method,
-      :use_s4
+      :use_s4,
+      :api_wsdl
     )
     
     # Creates ETAPI.log = {value}

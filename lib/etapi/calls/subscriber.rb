@@ -24,46 +24,79 @@ module ETAPI
       
       if @api_method == :soap
         
+        session = Savon::Client.new(@api_wsdl)
+        session.wsse.username = @username
+        session.wsse.password = @password
         
-        ETAPI.log(" * :soap * ")
+        soap_input = 'wsdl:CreateRequest'
+        soap_body = {
+          'wsdl:Objects' => {
+            'wsdl:EmailAddress' => @email,
+            'wsdl:Attributes' => [
+              {'wsdl:Name' => 'First Name', 'wsdl:Value' => 'Chris'},
+              {'wsdl:Name' => 'Last Name', 'wsdl:Value' => 'McGrath'}
+            ]
+          },
+          :attributes! => {
+            'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
+          }
+        }
+
+        response = session.request(:create) do |soap|
+          soap.input = soap_input
+          soap.body  = soap_body
+        end
+        
+        check_response(response)
+        
+        response = Nokogiri::XML(response.http.body)
+        response.remove_namespaces!
+        
+        subscriber_id     = response.xpath("//NewID")
+        subscriber_msg    = response.xpath("//StatusMessage")
+    
+        ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
+        
         
       else
-        # build xml data
-        data = ""
-        xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-        xml.instruct!
-        xml.exacttarget do
-          xml.authorization do
-            xml.username @username
-            xml.password @password
-          end
-          xml.system do
-            xml.system_name "subscriber"
-            xml.action "add"
-            xml.search_type "listid"
-            xml.search_value @list_id
-            xml.search_value2 nil
-            xml.values do
-              xml.Email__Address @email
-              xml.status "active"
-              @attributes.each do |name, value|
-                eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
-              end
+        if true # wrap
+          # build xml data
+          data = ""
+          xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
+          xml.instruct!
+          xml.exacttarget do
+            xml.authorization do
+              xml.username @username
+              xml.password @password
             end
-            xml.update true
+            xml.system do
+              xml.system_name "subscriber"
+              xml.action "add"
+              xml.search_type "listid"
+              xml.search_value @list_id
+              xml.search_value2 nil
+              xml.values do
+                xml.Email__Address @email
+                xml.status "active"
+                @attributes.each do |name, value|
+                  eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
+                end
+              end
+              xml.update true
+            end
           end
+      
+          data_encoded = "qf=xml&xml=" + url_encode(data)
+      
+          response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
+          check_response(response)
+          response = Nokogiri::XML::Document.parse(response.read_body)
+      
+          subscriber_id     = response.xpath("//subscriber_description")
+          subscriber_msg    = response.xpath("//subscriber_info")
+      
+          ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
         end
-      
-        data_encoded = "qf=xml&xml=" + url_encode(data)
-      
-        response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
-        check_response(response)
-        response = Nokogiri::XML::Document.parse(response.read_body)
-      
-        subscriber_id     = response.xpath("//subscriber_description")
-        subscriber_msg    = response.xpath("//subscriber_info")
-      
-        ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
       end
       
     end
