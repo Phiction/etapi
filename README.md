@@ -6,12 +6,12 @@ ETAPI is an ExactTarget API wrapper for both XML and SOAP methods.
 Installation
 ------------
 
-	gem install etapi
+```ruby
+gem install etapi
+```
 
-Session
--------
-
-### Configuration
+Configuration
+-------------
 
 Create an initializer
 
@@ -28,13 +28,20 @@ Options (default, available)
 * `api_method` (:xml, [:xml, :soap])
 * `use_s4` (false)
 
+Session
+-------
+
 ### New
 
-	session = ETAPI::Session.new
+```ruby
+session = ETAPI::Session.new
+```
 
 Subscribers
 -----------
 
 ### Add
 
-	tests
+```ruby
+tests
+```
