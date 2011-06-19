@@ -14,8 +14,9 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "etapi"
   
-  s.add_dependency("builder",  ">= 2.1.2")
-  s.add_dependency("nokogiri", ">= 1.4.1")
+  s.add_dependency("builder",   ">= 2.1.2")
+  s.add_dependency("nokogiri",  ">= 1.4.1")
+  s.add_dependency("savon",     ">= 0.9.0")
   
   s.files         = `git ls-files`.split("\n")
   s.require_path  = "lib"

@@ -39,6 +39,8 @@ module ETAPI
       # convert options
       @api_method = @api_method.to_sym
       
+      require("savon") if @api_method == :soap
+      
       # set uri
       if @api_method == :xml
         @api_uri = (@use_s4) ? DEFAULTS[:api_uri_xml_s4] : DEFAULTS[:api_uri_xml]

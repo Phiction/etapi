@@ -22,42 +22,49 @@ module ETAPI
       # convert options
       @list_id = @list_id.to_i
       
-      # build xml data
-      data = ""
-      xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-      xml.instruct!
-      xml.exacttarget do
-        xml.authorization do
-          xml.username @username
-          xml.password @password
-        end
-        xml.system do
-          xml.system_name "subscriber"
-          xml.action "add"
-          xml.search_type "listid"
-          xml.search_value @list_id
-          xml.search_value2 nil
-          xml.values do
-            xml.Email__Address @email
-            xml.status "active"
-            @attributes.each do |name, value|
-              eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
-            end
+      if @api_method == :soap
+        
+        
+        ETAPI.log(" * :soap * ")
+        
+      else
+        # build xml data
+        data = ""
+        xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
+        xml.instruct!
+        xml.exacttarget do
+          xml.authorization do
+            xml.username @username
+            xml.password @password
           end
-          xml.update true
+          xml.system do
+            xml.system_name "subscriber"
+            xml.action "add"
+            xml.search_type "listid"
+            xml.search_value @list_id
+            xml.search_value2 nil
+            xml.values do
+              xml.Email__Address @email
+              xml.status "active"
+              @attributes.each do |name, value|
+                eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
+              end
+            end
+            xml.update true
+          end
         end
+      
+        data_encoded = "qf=xml&xml=" + url_encode(data)
+      
+        response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
+        check_response(response)
+        response = Nokogiri::XML::Document.parse(response.read_body)
+      
+        subscriber_id     = response.xpath("//subscriber_description")
+        subscriber_msg    = response.xpath("//subscriber_info")
+      
+        ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
       end
-      
-      data_encoded = "qf=xml&xml=" + url_encode(data)
-      
-      response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
-      check_response(response)
-      response = Nokogiri::XML::Document.parse(response.read_body)
-      
-      subscriber_id     = response.xpath("//subscriber_description")
-      subscriber_msg    = response.xpath("//subscriber_info")
-      
-      ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
       
     end
     
@@ -170,40 +177,47 @@ module ETAPI
       @list_id        = @list_id.to_i unless @list_id.blank?
       @account_id     = @account_id.to_i unless @account_id.blank?
       
-      # build xml data
-      data = ""
-      xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-      xml.instruct!
-      xml.exacttarget do
-        xml.authorization do
-          xml.username @username
-          xml.password @password
-        end
-        xml.system do
-          xml.system_name "subscriber"
-          xml.action "edit"
-          xml.search_type @subscriber_id.blank? ? "listid" : "subid"
-          xml.search_value @subscriber_id.blank? ? @list_id : @subscriber_id
-          xml.search_value2 @email
-          xml.values do
-            @attributes.each do |name, value|
-              eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
+      if @api_method == :soap
+        
+        
+        ETAPI.log(" * :soap * ")
+        
+      else
+        # build xml data
+        data = ""
+        xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
+        xml.instruct!
+        xml.exacttarget do
+          xml.authorization do
+            xml.username @username
+            xml.password @password
+          end
+          xml.system do
+            xml.system_name "subscriber"
+            xml.action "edit"
+            xml.search_type @subscriber_id.blank? ? "listid" : "subid"
+            xml.search_value @subscriber_id.blank? ? @list_id : @subscriber_id
+            xml.search_value2 @email
+            xml.values do
+              @attributes.each do |name, value|
+                eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
+              end
+              xml.ChannelMemberID @account_id if ETAPI.use_s4
             end
-            xml.ChannelMemberID @account_id if ETAPI.use_s4
           end
         end
+      
+        data_encoded = "qf=xml&xml=" + url_encode(data)
+      
+        response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
+        check_response(response)
+        response = Nokogiri::XML::Document.parse(response.read_body)
+      
+        subscriber_id     = response.xpath("//subscriber_description")
+        subscriber_msg    = response.xpath("//subscriber_info")
+      
+        ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
       end
-      
-      data_encoded = "qf=xml&xml=" + url_encode(data)
-      
-      response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
-      check_response(response)
-      response = Nokogiri::XML::Document.parse(response.read_body)
-      
-      subscriber_id     = response.xpath("//subscriber_description")
-      subscriber_msg    = response.xpath("//subscriber_info")
-      
-      ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
       
     end
     
