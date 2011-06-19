@@ -16,10 +16,17 @@ Session
 Create an initializer
 
 ```ruby
-	ETAPI.configure do |config|
-		config.use_s4      = true
-	end
+ETAPI.configure do |config|
+	# options
+end
 ```
+
+Options (default, available)
+
+* `username`
+* `password`
+* `api_method` (:xml, [:xml, :soap])
+* `use_s4` (false)
 
 ### New
 
