@@ -47,14 +47,14 @@ Subscribers
 ```ruby
 session.subscriber_add(
 	:email      => 'test@test.com',
-	:list_id    => 12345, # optional
-	:account_id => 1044867 # optional if using s4,
+	:list_id    => 12345, # optional if using api_method == :soap
+	:account_id => 67890 # optional if :using_s4,
 	:attributes => {
-		"Full Name" => "Demo User",
+		"Full Name" => "Test User",
 		"Custom"    => "Value"
 	}
 )
-=> 1234567890 # returns subscriber_id
+=> 1234567890 # subscriber_id
 ```
 
 ### Edit

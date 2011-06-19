@@ -17,64 +17,66 @@ module ETAPI
       
       # check for required options
       raise ArgumentError, "* missing :email *" if @email.blank?
+      raise ArgumentError, "* missing :list_id | must include :list_id if the api_method is :xml * " if @list_id.blank? && @api_method == :xml
       
       # convert options
       @list_id = @list_id.to_i unless @list_id.blank?
       
       if @api_method == :soap
-        
-        session = Savon::Client.new(@api_wsdl)
-        session.wsse.username = @username
-        session.wsse.password = @password
+        if true # wrap
+          session = Savon::Client.new(@api_wsdl)
+          session.wsse.username = @username
+          session.wsse.password = @password
 
-        @attributes = @attributes.map{|name, value| {"wsdl:Name" => "#{name}", "wsdl:Value" => "#{(value.is_a?(Array)) ? value.join(',') : value}"} }
+          @attributes = @attributes.map{|name, value| {"wsdl:Name" => "#{name}", "wsdl:Value" => "#{(value.is_a?(Array)) ? value.join(',') : value}"} }
         
-        soap_input = 'wsdl:CreateRequest'
-        if !@list_id.blank?
-          soap_body = {
-            'wsdl:Objects' => {
-              'wsdl:EmailAddress' => @email,
-              'wsdl:Attributes' => @attributes,
-              'wsdl:Lists' => {
-                'wsdl:ID' => @list_id,
-                'wsdl:Status' => 'Active'
+          soap_input = 'wsdl:CreateRequest'
+          if !@list_id.blank?
+            soap_body = {
+              'wsdl:Objects' => {
+                'wsdl:EmailAddress' => @email,
+                'wsdl:Attributes' => @attributes,
+                'wsdl:Lists' => {
+                  'wsdl:ID' => @list_id,
+                  'wsdl:Status' => 'Active'
+                },
+                :attributes! => {
+                  'wsdl:Lists' => {'xsi:type' => 'wsdl:SubscriberList'}
+                }
+              
               },
               :attributes! => {
-                'wsdl:Lists' => {'xsi:type' => 'wsdl:SubscriberList'}
+                'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
               }
-              
-            },
-            :attributes! => {
-              'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
             }
-          }
-        else
-          soap_body = {
-            'wsdl:Objects' => {
-              'wsdl:EmailAddress' => @email,
-              'wsdl:Attributes' => @attributes
-            },
-            :attributes! => {
-              'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
+          else
+            soap_body = {
+              'wsdl:Objects' => {
+                'wsdl:EmailAddress' => @email,
+                'wsdl:Attributes' => @attributes
+              },
+              :attributes! => {
+                'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
+              }
             }
-          }
-        end
+          end
         
-        response = session.request(:create) do |soap|
-          soap.input = soap_input
-          soap.body  = soap_body
-        end
+          response = session.request(:create) do |soap|
+            soap.input = soap_input
+            soap.body  = soap_body
+          end
         
-        response = Nokogiri::XML(response.http.body).remove_namespaces!
+          response = Nokogiri::XML(response.http.body).remove_namespaces!
         
-        check_response(response)
+          check_response(response)
         
-        subscriber_id     = response.xpath("//NewID").text.to_i
-        subscriber_msg    = response.xpath("//StatusMessage").text
+          subscriber_id     = response.xpath("//NewID").text.to_i
+          subscriber_msg    = response.xpath("//StatusMessage").text
     
-        ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
+          ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
         
-        return subscriber_id
+          return subscriber_id
+        end
         
       else
         if true # wrap
@@ -90,14 +92,14 @@ module ETAPI
             xml.system do
               xml.system_name "subscriber"
               xml.action "add"
-              xml.search_type "listid"
-              xml.search_value @list_id
+              xml.search_type @list_id.blank? ? nil : "listid"
+              xml.search_value @list_id.blank? ? nil : @list_id
               xml.search_value2 nil
               xml.values do
                 xml.Email__Address @email
                 xml.status "active"
                 @attributes.each do |name, value|
-                  eval("xml.#{name} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
+                  eval("xml.#{name.gsub(' ', '__')} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
                 end
               end
               xml.update true
@@ -110,10 +112,12 @@ module ETAPI
           check_response(response)
           response = Nokogiri::XML::Document.parse(response.read_body)
       
-          subscriber_id     = response.xpath("//subscriber_description")
-          subscriber_msg    = response.xpath("//subscriber_info")
+          subscriber_id     = response.xpath("//subscriber_description").text.to_i
+          subscriber_msg    = response.xpath("//subscriber_info").text
       
-          ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
+          ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
+          
+          return subscriber_id
         end
       end
       
