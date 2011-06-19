@@ -27,6 +27,7 @@ end
 Session
 -------
 
+### Create
 ```ruby
 session = ETAPI::Session.new(
 	:username   => "exact_target@username.com",
@@ -40,15 +41,20 @@ Subscribers
 -----------
 
 ### Add
-* Available methods [`:xml`, `:soap`]
+* Available methods `:xml`, `:soap`
+* The subscriber will be added to the parent account if using s4 and :account_id is blank
 
 ```ruby
 session.subscriber_add(
-	:list_id    => 12345,
 	:email      => 'test@test.com',
-	:full_name  => 'Test Test',
-	:account_id => 1044867 # must include if using s4
+	:list_id    => 12345, # optional
+	:account_id => 1044867 # optional if using s4,
+	:attributes => {
+		"Full Name" => "Demo User",
+		"Custom"    => "Value"
+	}
 )
+=> 1234567890 # returns subscriber_id
 ```
 
 ### Edit
@@ -97,5 +103,3 @@ Code
 * Rework XML generation
 * Merge subscriber_delete and subscriber_delete_from_list
 * Add example with attributes for subscriber_add and subsciber_edit
-* Fix subscriber_add account_id
-* list_id is not required for subscriber_add

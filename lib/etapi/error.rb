@@ -6,9 +6,6 @@ module ETAPI
       
       if @api_method == :soap
         
-        response = Nokogiri::XML::Document.parse(response.http.body)
-        response.remove_namespaces!
-        
         error_code  = response.xpath("//ErrorCode")
         error_msg   = response.xpath("//StatusMessage")
         
