@@ -17,24 +17,23 @@ Create an initializer
 
 ```ruby
 ETAPI.configure do |config|
-	# options
+	config.username    = "exact_target@username.com"
+	config.password    = "password"
+	config.api_method  = :soap # (defaults to :xml)
+	config.use_s4      = true
 end
 ```
-
-Options (default, available)
-
-* `username`
-* `password`
-* `api_method` (:xml, [:xml, :soap])
-* `use_s4` (false)
 
 Session
 -------
 
-### New
-
 ```ruby
-session = ETAPI::Session.new
+session = ETAPI::Session.new(
+	:username   => "exact_target@username.com",
+	:password   => "password",
+	:api_method => :soap,
+	:use_s4     => true
+)
 ```
 
 Subscribers
@@ -43,5 +42,25 @@ Subscribers
 ### Add
 
 ```ruby
-tests
+session.subscriber_add(
+	:list_id    => 12345,
+	:email      => 'test@test.com',
+	:full_name  => 'Test Test',
+	:account_id => 1044867 # must include is using s4
+)
 ```
+
+TODO
+====
+
+Subscribers
+-----------
+
+* Add (:soap)
+* Delete (:xml, :soap)
+* Delete From List (:xml, :soap)
+* Edit (:xml, :soap)
+* Master Unsubscribe (:xml, :soap)
+* Retrieve (:xml, :soap)
+
+...and tons of other stuff
