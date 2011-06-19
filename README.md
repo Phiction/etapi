@@ -40,7 +40,8 @@ Subscribers
 -----------
 
 ### Add
-* API methods [`:xml`, `:soap`]
+* Available methods [`:xml`, `:soap`]
+
 ```ruby
 session.subscriber_add(
 	:list_id    => 12345,
