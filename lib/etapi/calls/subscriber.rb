@@ -50,10 +50,13 @@ module ETAPI
       data_encoded = "qf=xml&xml=" + url_encode(data)
       
       response = @api_url.post( @api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s) )
-      doc = Nokogiri::XML::Document.parse( response.read_body )
       check_response(response)
+      response = Nokogiri::XML::Document.parse(response.read_body)
       
-      ETAPI.log(doc)
+      subscriber_id     = response.xpath("//subscriber_description")
+      subscriber_msg    = response.xpath("//subscriber_info")
+      
+      ETAPI.log("    Subscriber ID:      #{subscriber_id.text.to_i}\n    Subscriber Message: #{subscriber_msg.text}")
       
     end
     

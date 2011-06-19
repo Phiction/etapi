@@ -15,9 +15,11 @@ Session
 
 Create an initializer
 
+```ruby
 	ETAPI.configure do |config|
 		config.use_s4      = true
 	end
+```
 
 ### New
 
