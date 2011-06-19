@@ -39,7 +39,8 @@ session = ETAPI::Session.new(
 Subscribers
 -----------
 
-### Add (`:xml`, `:soap`)
+### Add
+* API methods [`:xml`, `:soap`]
 ```ruby
 session.subscriber_add(
 	:list_id    => 12345,
