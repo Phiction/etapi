@@ -46,7 +46,7 @@ session.subscriber_add(
 	:list_id    => 12345,
 	:email      => 'test@test.com',
 	:full_name  => 'Test Test',
-	:account_id => 1044867 # must include is using s4
+	:account_id => 1044867 # must include if using s4
 )
 ```
 
@@ -63,4 +63,4 @@ Subscribers
 * Master Unsubscribe (:xml, :soap)
 * Retrieve (:xml, :soap)
 
-...and tons of other stuff 
+`...and tons of other stuff `
