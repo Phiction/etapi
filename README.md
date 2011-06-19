@@ -84,12 +84,13 @@ TODO
 Subscribers
 -----------
 
-* Add (:soap)
-* Delete (:soap)
-* Delete From List (:soap)
-* Edit (:xml, :soap)
-* Master Unsubscribe (:xml, :soap)
-* Retrieve (:xml, :soap)
+* Add [:soap]
+* Delete [:soap]
+* Delete From List [:soap]
+* Edit [:soap]
+* Master Unsubscribe [:xml, :soap]
+* Retrieve (by list_id and subscriber_id) [:xml, :soap]
+* Retrieve Lists [:xml, :soap]
 
 Code
 ----
