@@ -106,6 +106,49 @@ module ETAPI
       
     end
     
+    def subscriber_delete(*args)
+      #a.subscriber_delete(:subscriber_id => 241224046)
+      
+      # options
+      options         = args.extract_options!
+      @subscriber_id  = options[:subscriber_id]
+      
+      # check for required options
+      raise ArgumentError, "* missing :subscriber_id *" if @subscriber_id.blank?
+      
+      # convert options
+      @subscriber_id = @subscriber_id.to_i
+      
+      # build xml data
+      data = ""
+      xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
+      xml.instruct!
+      xml.exacttarget do
+        xml.authorization do
+          xml.username @username
+          xml.password @password
+        end
+        xml.system do
+          xml.system_name "subscriber"
+          xml.action "delete"
+          xml.search_type "subid"
+          xml.search_value @subscriber_id
+          xml.search_value2 nil
+        end
+      end
+      
+      data_encoded = "qf=xml&xml=" + url_encode(data)
+      
+      response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
+      check_response(response)
+      response = Nokogiri::XML::Document.parse(response.read_body)
+      
+      subscriber_msg    = response.xpath("//subscriber_info")
+      
+      ETAPI.log("    Subscriber Message: #{subscriber_msg.text}")
+      
+    end
+    
   end
   
 end

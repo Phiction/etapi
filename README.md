@@ -40,7 +40,6 @@ Subscribers
 -----------
 
 ### Add
-
 ```ruby
 session.subscriber_add(
 	:list_id    => 12345,
@@ -50,8 +49,14 @@ session.subscriber_add(
 )
 ```
 
-### Delete From List
+### Delete
+```ruby
+session.subscriber_delete(
+	:subscriber_id => 12345
+)
+```
 
+### Delete From List
 ```ruby
 session.subscriber_delete_from_list(
 	:list_id    => 12345,
@@ -66,10 +71,12 @@ Subscribers
 -----------
 
 * Add (:soap)
-* Delete (:xml, :soap)
-* Delete From List (:xml, :soap)
+* Delete (:soap)
+* Delete From List (:soap)
 * Edit (:xml, :soap)
 * Master Unsubscribe (:xml, :soap)
 * Retrieve (:xml, :soap)
 
-`...and tons of other stuff `
+Code
+----
+* Rework XML generation
