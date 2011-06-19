@@ -2,7 +2,7 @@ require("etapi/calls/subscriber")
 
 module ETAPI
   
-  class << self
+  class Session
     
     # set default options
     DEFAULTS = {

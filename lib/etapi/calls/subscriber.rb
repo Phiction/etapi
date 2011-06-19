@@ -1,6 +1,6 @@
 module ETAPI
   
-  class << self
+  class Session
     
     def subscriber_add(*args)
       
@@ -16,7 +16,7 @@ module ETAPI
       raise ArgumentError, "* missing :list_id *" if @list_id.blank?
       raise ArgumentError, "* missing :email *" if @email.blank?
       raise ArgumentError, "* missing :full_name *" if @full_name.blank?
-      raise ArgumentError, "* missing :account_id | [using s4] *" if ESP.exact_target_use_s4 && @account_id.blank?
+      raise ArgumentError, "* missing :account_id | [using s4] *" if ETAPI.use_s4 && @account_id.blank?
       
       # convert options
       @list_id = @list_id.to_i
@@ -52,7 +52,7 @@ module ETAPI
       response = @api_url.post( @api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s) )
       doc = Nokogiri::XML::Document.parse( response.read_body )
       
-      ESP.log(doc)
+      ETAPI.log(doc)
       
     end
     
