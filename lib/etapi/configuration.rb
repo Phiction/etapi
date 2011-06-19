@@ -4,21 +4,21 @@ require("logger")
 require("builder")
 require("nokogiri")
 require("net/https")
-require("espapis/esp/exact_target")
+require("etapi/exact_target")
 
 include(ERB::Util)
 
-module ESP
+module ETAPI
   module Configuration
     
     attr_accessor(
-      :exact_target_username,
-      :exact_target_password,
-      :exact_target_api_method,
-      :exact_target_use_s4
+      :username,
+      :password,
+      :api_method,
+      :use_s4
     )
     
-    # Creates ESP.log = {value}
+    # Creates ETAPI.log = {value}
     attr_writer(:log)
     
     # Returns whether to log. (true)
@@ -26,7 +26,7 @@ module ESP
      @log != false
     end
     
-    # Creates ESP.logger = {value}
+    # Creates ETAPI.logger = {value}
     attr_writer(:logger)
     
     # Returns the logger. (::Logger.new(STDOUT))
@@ -34,7 +34,7 @@ module ESP
       @logger ||= ::Logger.new(STDOUT)
     end
     
-    # Creates ESP.log_level = {value}
+    # Creates ETAPI.log_level = {value}
     attr_writer(:log_level)
     
     # Returns the log level. (:debug)
@@ -47,7 +47,7 @@ module ESP
      logger.send(log_level, "\n#{message}\n") if log?
     end
     
-    # Creates ESP.log = {value}
+    # Creates ETAPI.log = {value}
     attr_writer(:raise_errors)
     
     # Returns whether to raise errors. (true)

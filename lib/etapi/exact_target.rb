@@ -1,8 +1,8 @@
-require("espapis/esp/exact_target/subscriber")
+require("etapi/calls/subscriber")
 
-module ESP
+module ETAPI
   
-  class ExactTarget
+  class << self
     
     # set default options
     DEFAULTS = {
@@ -24,10 +24,10 @@ module ESP
       
       # merge options with configuration
       options     = args.extract_options!
-      @username   = options[:username]    ||= ESP.exact_target_username
-      @password   = options[:password]    ||= ESP.exact_target_password
-      @api_method = options[:api_method]  ||= ESP.exact_target_api_method ||= DEFAULTS[:api_method]
-      @use_s4     = options[:use_s4]      ||= ESP.exact_target_use_s4     ||= DEFAULTS[:use_s4]
+      @username   = options[:username]    ||= ETAPI.username
+      @password   = options[:password]    ||= ETAPI.password
+      @api_method = options[:api_method]  ||= ETAPI.api_method ||= DEFAULTS[:api_method]
+      @use_s4     = options[:use_s4]      ||= ETAPI.use_s4     ||= DEFAULTS[:use_s4]
       @headers    = {"Content-Type" => "application/x-www-form-urlencoded", "Connection" => "close"}
       
       # check for required options

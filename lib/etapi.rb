@@ -1,6 +1,6 @@
-require("espapis/configuration")
+require("etapi/configuration")
 
-module ESP
+module ETAPI
   extend Configuration
   
   def self.configure

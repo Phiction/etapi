@@ -1,6 +1,6 @@
-module ESP
+module ETAPI
   
-  class ExactTarget
+  class << self
     
     def subscriber_add(*args)
       
