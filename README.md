@@ -57,8 +57,8 @@ session.subscriber_add(
 => 1234567890 # subscriber_id
 ```
 
-### Edit With `:sbuscriber_id`
-* Available methods `:xml`
+### Edit With `:subscriber_id`
+* Available methods `:xml`, `:soap`
 * The subscriber will be added to the parent account if using s4 and :account_id is blank
 
 ```ruby
@@ -74,6 +74,7 @@ session.subscriber_edit(
 
 ### Edit With `:list_id`, `:email`
 * Available methods `:xml`
+* The subscriber will be added to the parent account if using s4 and :account_id is blank
 
 ```ruby
 session.subscriber_edit(
