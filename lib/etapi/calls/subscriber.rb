@@ -125,6 +125,7 @@ module ETAPI
     
     def subscriber_edit(*args)
       #a.subscriber_edit(:list_id => 111247, :email => 'test@test.com')
+      #a.subscriber_edit(:email => 'test@test.com', :attributes => {'Email Address' => 'test1@test.com', 'First Name' => 'Chris', 'Last Name' => 'McGrath', 'Full Name' => 'Chris McGrath'})
       #a.subscriber_edit(:subscriber_id => 241224046, :attributes => {'Email Address' => 'test1@test.com', 'First Name' => 'Chris'})
       #a.subscriber_edit(:subscriber_id => 241224046, :account_id => 1044867, :attributes => {'Email Address' => 'test1@test.com', 'First Name' => 'Chris'})
       
@@ -138,8 +139,8 @@ module ETAPI
       @account_id     = options[:account_id]
       
       # check for required options
-      raise ArgumentError, "* missing :subscriber_id || (:list_id && :email) *" if (@subscriber_id.blank? && @list_id.blank? && @email.blank?) || (@subscriber_id.blank? && (@list_id.blank? || @email.blank?))
-      raise ArgumentError, "* missing :subscriber_id | must include :subscriber_id if the api_method is :soap *" if @subscriber_id.blank? && @api_method == :soap
+      raise ArgumentError, "* missing :subscriber_id || (:list_id && :email) *" if (@subscriber_id.blank? && @list_id.blank? && @email.blank? && @api_method == :xml) || (@subscriber_id.blank? && (@list_id.blank? || @email.blank?) && @api_method == :xml)
+      raise ArgumentError, "* missing :email | must include :email if the api_method is :soap *" if @email.blank? && @api_method == :soap
       
       # convert options
       @subscriber_id  = @subscriber_id.to_i unless @subscriber_id.blank?
@@ -158,7 +159,7 @@ module ETAPI
           if !@list_id.blank?
             soap_body = {
               'wsdl:Objects' => {
-                'wsdl:SubscriberKey' => @subscriber_id,
+                'wsdl:EmailAddress' => @email,
                 'wsdl:Attributes' => @attributes,
                 'wsdl:Lists' => {
                   'wsdl:ID' => @list_id,
@@ -176,7 +177,7 @@ module ETAPI
           else
             soap_body = {
               'wsdl:Objects' => {
-                'wsdl:SubscriberKey' => @subscriber_id,
+                'wsdl:EmailAddress' => @email,
                 'wsdl:Attributes' => @attributes
               },
               :attributes! => {
@@ -185,7 +186,7 @@ module ETAPI
             }
           end
         
-          response = session.request(:create) do |soap|
+          response = session.request(:update) do |soap|
             soap.input = soap_input
             soap.body  = soap_body
           end
@@ -199,7 +200,8 @@ module ETAPI
     
           ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
         
-          return subscriber_id
+          return true
+        end
       else
         if true # wrap
           # build xml data
@@ -237,7 +239,7 @@ module ETAPI
       
           ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
         
-          return subscriber_id
+          return true
         end
         
       end
