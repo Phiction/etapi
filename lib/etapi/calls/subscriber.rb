@@ -18,7 +18,7 @@ module ETAPI
       
       # check for required options
       raise ArgumentError, "* missing :email *" if @email.blank?
-      raise ArgumentError, "* missing :list_id | must include :list_id if the api_method is :xml * " if @list_id.blank? && @api_method == :xml
+      raise ArgumentError, "* missing :list_id (must pass :list_id if the :api_method == :xml) * " if @list_id.blank? && @api_method == :xml
       
       # convert options
       @list_id = @list_id.to_i unless @list_id.blank?

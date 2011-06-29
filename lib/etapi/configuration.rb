@@ -7,6 +7,7 @@ require("nokogiri")
 require("net/https")
 require("etapi/error")
 require("etapi/exact_target")
+require("etapi/call_builder")
 
 include(ERB::Util)
 
@@ -17,8 +18,7 @@ module ETAPI
       :username,
       :password,
       :api_method,
-      :use_s4,
-      :api_wsdl
+      :use_s4
     )
     
     # Creates ETAPI.log = {value}
