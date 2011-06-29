@@ -31,6 +31,7 @@ module ETAPI
       @headers    = {"Content-Type" => "application/x-www-form-urlencoded", "Connection" => "close"}
       
       # check for required options
+      raise ArgumentError, "* :api_method == :soap is currently not supported *" if @api_method.to_sym == :soap
       raise ArgumentError, "* missing :username *" if @username.blank?
       raise ArgumentError, "* missing :password *" if @password.blank?
       raise ArgumentError, "* invalid :api_method | options => [:xml, :soap] *" unless ALLOWED_API_METHOD_OPTIONS.include?(@api_method.to_sym)

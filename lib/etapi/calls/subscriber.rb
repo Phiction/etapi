@@ -3,10 +3,14 @@ module ETAPI
   class Session
     
     def subscriber_add(*args)
-      #a.subscriber_add(:email => 'test@test.com', :attributes => {'Full Name' => 'Demo User'})
-      #a.subscriber_add(:email => 'test@test.com', :attributes => {'Full Name' => 'Demo User'}, :list_id => 111247)
-      #a.subscriber_add(:email => 'test@test.com', :account_id => 1044867, :attributes => {'Full Name' => 'Demo User'})
-      #a.subscriber_add(:email => 'test@test.com', :account_id => 1044867, :attributes => {'Full Name' => 'Demo User'}, :list_id => 111247)
+      # :xml
+      # a.subscriber_add(:email => 'apitest@apitest.com', :attributes => {'Full Name' => 'API Test'}, :list_id => 111247)
+      # a.subscriber_add(:email => 'apitest@apitest.com', :account_id => 1044867, :attributes => {'Full Name' => 'API Test'}, :list_id => 111247)
+      
+      # :soap
+      # a.subscriber_add(:email => 'apitest@apitest.com', :attributes => {'Full Name' => 'Demo User'})
+      # a.subscriber_add(:email => 'apitest@apitest.com', :account_id => 1044867, :attributes => {'Full Name' => 'Demo User'})
+      
       
       # options
       options         = args.extract_options!
