@@ -3,29 +3,22 @@ module ETAPI
   class Session
     
     def subscriber_add(*args)
-      # :xml
-      # a.subscriber_add(:email => 'apitest@apitest.com', :values => {'Full Name' => 'API Test'}, :list_id => 111247)
-      # a.subscriber_add(:email => 'apitest@apitest.com', :values => {'Full Name' => 'API Test'}, :account_id => 1044867, :list_id => 111247)
-      
-      # :soap
-      # a.subscriber_add(:email => 'apitest@apitest.com', :values => {'Full Name' => 'Demo User'})
-      # a.subscriber_add(:email => 'apitest@apitest.com', :values => {'Full Name' => 'Demo User'}, :account_id => 1044867)
-      
       
       # options
-      options         = args.extract_options!
-      @list_id        = options[:list_id] ||= nil
-      @email          = options[:email]
-      @full_name      = options[:full_name]
-      @values         = options[:values] ||= {}
-      @account_id     = options[:account_id]
+      options           = args.extract_options!
+      @list_id          = options[:list_id] ||= nil
+      @email            = options[:email]
+      @full_name        = options[:full_name]
+      @values           = options[:values] ||= {}
+      @account_id       = options[:account_id]
       
       # check for required options
-      raise ArgumentError, "* missing :email *" if @email.blank?
-      raise ArgumentError, "* missing :list_id (must pass :list_id if the :api_method == :xml) * " if @list_id.blank? && @api_method == :xml
+      required_options = ["email"]
+      required_options += ["list_id"] if @api_method == :xml
+      return false unless check_required(required_options)
       
       # update options
-      @list_id = @list_id.to_s unless @list_id.blank?
+      @list_id = @list_id.to_s
       @values.merge!({"Email Address" => @email, "status" => "active"})
       
       # merge parameters and values

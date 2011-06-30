@@ -34,6 +34,25 @@ module ETAPI
       
     end
     
+    def check_required(required_options)
+      missing_options = []
+      
+      for option in required_options
+        missing_options << ":#{option}" if eval("@#{option}.blank?")
+      end
+      
+      if !missing_options.blank?
+        if ETAPI.log?
+          ETAPI.log("    Code:    nil\n    Message: missing #{missing_options.join(', ')}")
+        elsif ETAPI.raise_errors?
+          raise(RuntimeError, "\n\n    Code:    nil\n    Message: missing #{missing_options.join(', ')}\n\n")
+        end
+        return false
+      end
+      
+      return true
+    end
+    
   end
   
 end
