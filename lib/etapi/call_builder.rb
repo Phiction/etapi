@@ -41,7 +41,7 @@ module ETAPI
         
         if !subscriber_id.blank? && !subscriber_msg.blank?
           ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}") if ETAPI.log?
-          return subscriber_id
+          return method == "add" ? subscriber_id : true
         else
           return false
         end

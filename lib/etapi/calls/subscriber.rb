@@ -8,7 +8,6 @@ module ETAPI
       options           = args.extract_options!
       @list_id          = options[:list_id] ||= nil
       @email            = options[:email]
-      @full_name        = options[:full_name]
       @values           = options[:values] ||= {}
       @account_id       = options[:account_id]
       
@@ -18,7 +17,6 @@ module ETAPI
       return false unless check_required(required_options)
       
       # update options
-      @list_id = @list_id.to_s
       @values.merge!({"Email Address" => @email, "status" => "active"})
       
       # merge parameters and values
@@ -34,173 +32,76 @@ module ETAPI
     end
     
     def subscriber_edit(*args)
-      #a.subscriber_edit(:list_id => 111247, :email => 'test@test.com')
-      #a.subscriber_edit(:email => 'test@test.com', :attributes => {'Email Address' => 'test1@test.com', 'First Name' => 'Chris', 'Last Name' => 'McGrath', 'Full Name' => 'Chris McGrath'})
-      #a.subscriber_edit(:subscriber_id => 241224046, :attributes => {'Email Address' => 'test1@test.com', 'First Name' => 'Chris'})
-      #a.subscriber_edit(:subscriber_id => 241224046, :account_id => 1044867, :attributes => {'Email Address' => 'test1@test.com', 'First Name' => 'Chris'})
-      
       
       # options
       options         = args.extract_options!
       @subscriber_id  = options[:subscriber_id]
-      @list_id        = options[:list_id]
-      @email          = options[:email]
-      @attributes     = options[:attributes] ||= []
-      @account_id     = options[:account_id]
+      @values         = options[:values] ||= {}
+      @account_id     = options[:account_id] ||= ""
       
       # check for required options
-      raise ArgumentError, "* missing :subscriber_id || (:list_id && :email) *" if (@subscriber_id.blank? && @list_id.blank? && @email.blank? && @api_method == :xml) || (@subscriber_id.blank? && (@list_id.blank? || @email.blank?) && @api_method == :xml)
-      raise ArgumentError, "* missing :email | must include :email if the api_method is :soap *" if @email.blank? && @api_method == :soap
+      required_options = ["subscriber_id"]
+      return false unless check_required(required_options)
       
-      # convert options
-      @subscriber_id  = @subscriber_id.to_i unless @subscriber_id.blank?
-      @list_id        = @list_id.to_i unless @list_id.blank?
-      @account_id     = @account_id.to_i unless @account_id.blank?
+      # merge parameters and values
+      @parameters = {
+        "search_type"   => "subid",
+        "search_value"  => @subscriber_id,
+        "search_value2" => "",
+        "values"        => @values
+      }
       
-      if @api_method == :soap
-        if true # wrap
-          session = Savon::Client.new(@api_wsdl)
-          session.wsse.username = @username
-          session.wsse.password = @password
-
-          @attributes = @attributes.map{|name, value| {"wsdl:Name" => "#{name}", "wsdl:Value" => "#{(value.is_a?(Array)) ? value.join(',') : value}"} }
-        
-          soap_input = 'wsdl:UpdateRequest'
-          if !@list_id.blank?
-            soap_body = {
-              'wsdl:Objects' => {
-                'wsdl:EmailAddress' => @email,
-                'wsdl:Attributes' => @attributes,
-                'wsdl:Lists' => {
-                  'wsdl:ID' => @list_id,
-                  'wsdl:Status' => 'Active'
-                },
-                :attributes! => {
-                  'wsdl:Lists' => {'xsi:type' => 'wsdl:SubscriberList'}
-                }
-              
-              },
-              :attributes! => {
-                'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
-              }
-            }
-          else
-            soap_body = {
-              'wsdl:Objects' => {
-                'wsdl:EmailAddress' => @email,
-                'wsdl:Attributes' => @attributes
-              },
-              :attributes! => {
-                'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
-              }
-            }
-          end
-        
-          response = session.request(:update) do |soap|
-            soap.input = soap_input
-            soap.body  = soap_body
-          end
-        
-          response = Nokogiri::XML(response.http.body).remove_namespaces!
-        
-          check_response(response)
-        
-          subscriber_id     = response.xpath("//NewID").text.to_i
-          subscriber_msg    = response.xpath("//StatusMessage").text
+      build_call("subscriber", "edit")
+      
+    end
     
-          ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
-        
-          return true
-        end
-      else
-        if true # wrap
-          # build xml data
-          data = ""
-          xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-          xml.instruct!
-          xml.exacttarget do
-            xml.authorization do
-              xml.username @username
-              xml.password @password
-            end
-            xml.system do
-              xml.system_name "subscriber"
-              xml.action "edit"
-              xml.search_type @subscriber_id.blank? ? "listid" : "subid"
-              xml.search_value @subscriber_id.blank? ? @list_id : @subscriber_id
-              xml.search_value2 @email
-              xml.values do
-                @attributes.each do |name, value|
-                  eval("xml.#{name.gsub(' ', '__')} '#{(value.is_a?(Array)) ? value.join(',') : value}'")
-                end
-                xml.ChannelMemberID @account_id if ETAPI.use_s4
-              end
-            end
-          end
+    def subscriber_edit_from_list(*args)
       
-          data_encoded = "qf=xml&xml=" + url_encode(data)
+      # options
+      options         = args.extract_options!
+      @list_id        = options[:list_id]
+      @email          = options[:email]
+      @values         = options[:values] ||= {}
+      @account_id     = options[:account_id] ||= ""
       
-          response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
-          check_response(response)
-          response = Nokogiri::XML::Document.parse(response.read_body)
+      # check for required options
+      required_options = ["list_id", "email"]
+      return false unless check_required(required_options)
       
-          subscriber_id     = response.xpath("//subscriber_description").text.to_i
-          subscriber_msg    = response.xpath("//subscriber_info").text
+      # merge parameters and values
+      @parameters = {
+        "search_type"   => "listid",
+        "search_value"  => @list_id,
+        "search_value2" => @email,
+        "values"        => @values
+      }
       
-          ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
-        
-          return true
-        end
-        
-      end
+      build_call("subscriber", "edit")
       
     end
     
     def subscriber_delete(*args)
-      #a.subscriber_delete(:subscriber_id => 241224046)
       
       # options
       options         = args.extract_options!
       @subscriber_id  = options[:subscriber_id]
       
       # check for required options
-      raise ArgumentError, "* missing :subscriber_id *" if @subscriber_id.blank?
+      required_options = ["subscriber_id"]
+      return false unless check_required(required_options)
       
-      # convert options
-      @subscriber_id = @subscriber_id.to_i
+      # merge parameters and values
+      @parameters = {
+        "search_type"   => "subid",
+        "search_value"  => @subscriber_id,
+        "search_value2" => ""
+      }
       
-      # build xml data
-      data = ""
-      xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-      xml.instruct!
-      xml.exacttarget do
-        xml.authorization do
-          xml.username @username
-          xml.password @password
-        end
-        xml.system do
-          xml.system_name "subscriber"
-          xml.action "delete"
-          xml.search_type "subid"
-          xml.search_value @subscriber_id
-          xml.search_value2 nil
-        end
-      end
-      
-      data_encoded = "qf=xml&xml=" + url_encode(data)
-      
-      response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
-      check_response(response)
-      response = Nokogiri::XML::Document.parse(response.read_body)
-      
-      subscriber_msg    = response.xpath("//subscriber_info")
-      
-      ETAPI.log("    Subscriber Message: #{subscriber_msg.text}")
+      build_call("subscriber", "delete")
       
     end
     
-    def subscriber_delete_from_list(*args)
-      #a.subscriber_delete_from_list(:list_id => 111247, :email => 'test@test.com')
+    def subscriber_remove_from_list(*args)
       
       # options
       options         = args.extract_options!
@@ -208,39 +109,17 @@ module ETAPI
       @email          = options[:email]
       
       # check for required options
-      raise ArgumentError, "* missing :list_id *" if @list_id.blank?
-      raise ArgumentError, "* missing :email *" if @email.blank?
+      required_options = ["list_id", "email"]
+      return false unless check_required(required_options)
       
-      # convert options
-      @list_id = @list_id.to_i
+      # merge parameters and values
+      @parameters = {
+        "search_type"   => "listid",
+        "search_value"  => @list_id,
+        "search_value2" => @email
+      }
       
-      # build xml data
-      data = ""
-      xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-      xml.instruct!
-      xml.exacttarget do
-        xml.authorization do
-          xml.username @username
-          xml.password @password
-        end
-        xml.system do
-          xml.system_name "subscriber"
-          xml.action "delete"
-          xml.search_type "listid"
-          xml.search_value @list_id
-          xml.search_value2 @email
-        end
-      end
-      
-      data_encoded = "qf=xml&xml=" + url_encode(data)
-      
-      response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
-      check_response(response)
-      response = Nokogiri::XML::Document.parse(response.read_body)
-      
-      subscriber_msg    = response.xpath("//subscriber_info")
-      
-      ETAPI.log("    Subscriber Message: #{subscriber_msg.text}")
+      build_call("subscriber", "delete")
       
     end
     

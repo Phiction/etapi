@@ -10,17 +10,8 @@ Documentation
 TODO
 ====
 
-Subscribers
+Subscriber Management (`:xml`)
 -----------
-* Delete [:soap]
-* Delete From List [:soap]
-* Master Unsubscribe [:xml, :soap]
-* Retrieve (by list_id and subscriber_id) [:xml, :soap]
-* Retrieve Lists [:xml, :soap]
-
-Code
-----
-* Clean UPPPP
-* Rework XML generation
-* Merge subscriber_delete and subscriber_delete_from_list
-* Add example with attributes for subscriber_add and subsciber_edit
+`subscriber_add` : add s4 account
+`subscriber_edit` : add s4 account
+`subscriber_retrieve`
