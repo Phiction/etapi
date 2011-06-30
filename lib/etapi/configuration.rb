@@ -18,7 +18,9 @@ module ETAPI
       :username,
       :password,
       :api_method,
-      :use_s4
+      :use_s4,
+      :raise_errors,
+      :log
     )
     
     # Creates ETAPI.log = {value}
