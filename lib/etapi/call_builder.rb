@@ -25,7 +25,15 @@ module ETAPI
                   end
                 end
               else
-                eval("xml.#{parameter[0]} '#{parameter[1]}'")
+                if parameter[1].is_a?(Hash)
+                  xml.tag!(parameter[0]) do
+                    parameter[1].each do |key, value|
+                      eval("xml.#{key.gsub(/\s/, '__')} '#{value}'")
+                    end
+                  end
+                else
+                  eval("xml.#{parameter[0]} '#{parameter[1]}'")
+                end
               end
             end
           end
@@ -36,8 +44,13 @@ module ETAPI
         check_response(response)
         response = Nokogiri::XML::Document.parse(response.read_body)
         
-        subscriber_id     = response.xpath("//subscriber_description").text.to_i
-        subscriber_msg    = response.xpath("//subscriber_info").text
+        if method == "masterunsub"
+          subscriber_id     = response.xpath("//emailaddress").text
+          subscriber_msg    = response.xpath("//status").text
+        else
+          subscriber_id     = response.xpath("//subscriber_description").text.to_i
+          subscriber_msg    = response.xpath("//subscriber_info").text
+        end
         
         if !subscriber_id.blank? && !subscriber_msg.blank?
           ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}") if ETAPI.log?

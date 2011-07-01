@@ -43,9 +43,9 @@ module ETAPI
       
       if !missing_options.blank?
         if ETAPI.log?
-          ETAPI.log("    Code:    nil\n    Message: missing #{missing_options.join(', ')}")
+          ETAPI.log("    Code:    ETAPI\n    Message: missing #{missing_options.join(', ')}")
         elsif ETAPI.raise_errors?
-          raise(RuntimeError, "\n\n    Code:    nil\n    Message: missing #{missing_options.join(', ')}\n\n")
+          raise(RuntimeError, "\n\n    Code:    ETAPI\n    Message: missing #{missing_options.join(', ')}\n\n")
         end
         return false
       end

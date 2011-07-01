@@ -12,7 +12,8 @@ TODO
 
 Subscriber Management `:xml`
 -----------
-`subscriber_add` : add s4 `:account_id`, add `:status`  
-`subscriber_edit` : add s4 `:account_id`, add `:status`  
-`subscriber_retrieve`  
-`subscriber_unsubscribe`  
+`subscriber_add` : add s4 `:account_id`, add `:status`
+`subscriber_edit` : add s4 `:account_id`, add `:status`
+`subscriber_retrieve`
+`subscriber_retrieve` : add s4 `:account_id`, add `:status`
+`subscriber_unsubscribe` : multiple email addresses

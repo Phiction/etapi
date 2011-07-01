@@ -123,6 +123,28 @@ module ETAPI
       
     end
     
+    def subscriber_unsubscribe_master(*args)
+      
+      # options
+      options         = args.extract_options!
+      @email          = options[:email]
+      
+      # check for required options
+      required_options = ["email"]
+      return false unless check_required(required_options)
+      
+      # merge parameters and values
+      @parameters = {
+        "search_type"   => "emailaddress",
+        "search_value"  => {
+          "emailaddress" => @email
+        }
+      }
+      
+      build_call("subscriber", "masterunsub")
+      
+    end
+    
   end
   
 end
