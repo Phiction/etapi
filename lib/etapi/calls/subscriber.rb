@@ -145,6 +145,28 @@ module ETAPI
       
     end
     
+    def subscriber_retrieve(*args)
+      
+      # options
+      options         = args.extract_options!
+      @subscriber_id  = options[:subscriber_id]
+      @account_id     = options[:account_id] ||= ""
+      
+      # check for required options
+      required_options = ["subscriber_id"]
+      return false unless check_required(required_options)
+      
+      # merge parameters and values
+      @parameters = {
+        "search_type"   => "subid",
+        "search_value"  => @subscriber_id,
+        "search_value2" => ""
+      }
+      
+      build_call("subscriber", "retrieve")
+      
+    end
+    
   end
   
 end

@@ -47,6 +47,13 @@ module ETAPI
         if method == "masterunsub"
           subscriber_id     = response.xpath("//emailaddress").text
           subscriber_msg    = response.xpath("//status").text
+        elsif method == "retrieve"
+          subscriber_id     = response.xpath("//subid")[0].text
+          subscriber_msg    = "Found"
+          attributes        = {}
+          response.xpath("//subscriber").children.each do |child|
+            attributes[child.name] = child.text
+          end
         else
           subscriber_id     = response.xpath("//subscriber_description").text.to_i
           subscriber_msg    = response.xpath("//subscriber_info").text
@@ -54,7 +61,13 @@ module ETAPI
         
         if !subscriber_id.blank? && !subscriber_msg.blank?
           ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}") if ETAPI.log?
-          return method == "add" ? subscriber_id : true
+          if method == "add"
+            return subscriber_id
+          elsif method == "retrieve"
+            return attributes
+          else
+            return true
+          end
         else
           return false
         end
