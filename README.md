@@ -12,11 +12,11 @@ TODO
 
 Subscriber Management `:xml`
 -----------
-`subscriber_add` : add s4 `:account_id`, add `:status`
-`subscriber_edit` : add s4 `:account_id`, add `:status`
-`subscriber_retrieve` : add s4 `:account_id`, add `:status`
-`subscriber_retrieve_from_list`
-`subscriber_retrieve_from_list` : add s4 `:account_id`, add `:status`
-`subscriber_retrieve_lists`
-`subscriber_retrieve_lists` : add s4 `:account_id`, add `:status`
+`subscriber_add` : add s4 `:account_id`, add `:status`  
+`subscriber_edit` : add s4 `:account_id`, add `:status`  
+`subscriber_retrieve` : add s4 `:account_id`, add `:status`  
+`subscriber_retrieve_from_list`  
+`subscriber_retrieve_from_list` : add s4 `:account_id`, add `:status`  
+`subscriber_retrieve_lists`  
+`subscriber_retrieve_lists` : add s4 `:account_id`, add `:status`  
 `subscriber_unsubscribe_master` : multiple email addresses
