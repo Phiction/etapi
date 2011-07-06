@@ -20,7 +20,8 @@ module ETAPI
         "search_value2" => ""
       }
       
-      build_call("tracking", "retrieve")
+      response = build_call("tracking", "retrieve", {:parse_response => false})
+      Hash.from_xml(response)['exacttarget']['system']['tracking']['emailSummary'] rescue false
       
     end
     

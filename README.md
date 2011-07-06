@@ -25,10 +25,6 @@ List Management `:xml`
 ---
 `list_retrieve_subscribers`  
 
-Tracking Management `:xml`
----
-`tracking_summary` : (job_id)  
-
 Email Management `:xml`
 ---
 `email_retrieve_body` : (email_id)  
