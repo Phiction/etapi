@@ -21,7 +21,6 @@ module ETAPI
         error_code  = response.xpath("//error")
         error_msg   = response.xpath("//error_description")
         
-        #if error_code && error_msg && !error_code.empty? && !error_msg.empty?
         if !error_code.blank? && !error_msg.blank?
           if ETAPI.raise_errors?
             raise(RuntimeError, "\n\n    Code:    #{error_code.text.to_i}\n    Message: #{error_msg.text}\n\n")

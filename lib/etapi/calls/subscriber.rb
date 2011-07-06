@@ -27,7 +27,8 @@ module ETAPI
         "values"        => @values
       }
       
-      build_call("subscriber", "add")
+      response = build_call("subscriber", "add")
+      response.xpath("//subscriber_description").text.to_i rescue false
       
     end
     
@@ -51,7 +52,8 @@ module ETAPI
         "values"        => @values
       }
       
-      build_call("subscriber", "edit")
+      response = build_call("subscriber", "edit")
+      response.xpath("//subscriber_description").text == @subscriber_id.to_s rescue false
       
     end
     
@@ -76,7 +78,8 @@ module ETAPI
         "values"        => @values
       }
       
-      build_call("subscriber", "edit")
+      response = build_call("subscriber", "edit")
+      response.xpath("//subscriber_description").text.blank? && response.xpath("//subscriber_info").text.blank? ? false : true rescue false
       
     end
     
@@ -97,7 +100,8 @@ module ETAPI
         "search_value2" => ""
       }
       
-      build_call("subscriber", "delete")
+      response = build_call("subscriber", "delete")
+      response.xpath("//subscriber_info").text.blank? ? false : true rescue false
       
     end
     
@@ -119,7 +123,8 @@ module ETAPI
         "search_value2" => @email
       }
       
-      build_call("subscriber", "delete")
+      response = build_call("subscriber", "delete")
+      response.xpath("//subscriber_info").text.blank? ? false : true rescue false
       
     end
     
@@ -141,7 +146,8 @@ module ETAPI
         }
       }
       
-      build_call("subscriber", "masterunsub")
+      response = build_call("subscriber", "masterunsub")
+      response.xpath("//emailaddress").text == @email ? true : false rescue false
       
     end
     
@@ -163,7 +169,8 @@ module ETAPI
         "search_value2" => ""
       }
       
-      build_call("subscriber", "retrieve")
+      response = build_call("subscriber", "retrieve", {:parse_response => false})
+      Hash.from_xml(response)['exacttarget']['system']['subscriber'] rescue false
       
     end
     

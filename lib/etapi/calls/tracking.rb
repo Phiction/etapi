@@ -15,6 +15,7 @@ module ETAPI
       # merge parameters and values
       @parameters = {
         "search_type"   => "jobID",
+        "sub_action"    => "summary",
         "search_value"  => @job_id,
         "search_value2" => ""
       }

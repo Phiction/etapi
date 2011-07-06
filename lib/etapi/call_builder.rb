@@ -2,7 +2,10 @@ module ETAPI
   
   class Session
     
-    def build_call(type, method)
+    def build_call(type, method, *args)
+      
+      options         = args.extract_options!
+      parse_response  = options[:parse_reponse] ||= false
       
       if @api_method == :xml
         
@@ -42,35 +45,7 @@ module ETAPI
         data_encoded = "qf=xml&xml=" + url_encode(data)
         response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
         check_response(response)
-        response = Nokogiri::XML::Document.parse(response.read_body)
-        
-        if method == "masterunsub"
-          subscriber_id     = response.xpath("//emailaddress").text
-          subscriber_msg    = response.xpath("//status").text
-        elsif method == "retrieve"
-          subscriber_id     = response.xpath("//subid")[0].text
-          subscriber_msg    = "Found"
-          attributes        = {}
-          response.xpath("//subscriber").children.each do |child|
-            attributes[child.name] = child.text
-          end
-        else
-          subscriber_id     = response.xpath("//subscriber_description").text.to_i
-          subscriber_msg    = response.xpath("//subscriber_info").text
-        end
-        
-        if !subscriber_id.blank? && !subscriber_msg.blank?
-          ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}") if ETAPI.log?
-          if method == "add"
-            return subscriber_id
-          elsif method == "retrieve"
-            return attributes
-          else
-            return true
-          end
-        else
-          return false
-        end
+        parse_response ? Nokogiri::XML::Document.parse(response.read_body) : response.read_body
         
       elsif type == :soap
         if true # wrap
