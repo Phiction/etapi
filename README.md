@@ -10,6 +10,9 @@ Documentation
 TODO
 ====
 
+`:soap`
+---
+
 Subscriber Management `:xml`
 ---
 `subscriber_add` : add s4 `:account_id`, add `:status`  
