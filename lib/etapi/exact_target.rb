@@ -1,4 +1,5 @@
 require("etapi/calls/list")
+require("etapi/calls/email")
 require("etapi/calls/tracking")
 require("etapi/calls/subscriber")
 
