@@ -27,7 +27,7 @@ List Management `:xml`
 
 Email Management `:xml`
 ---
-`email_retrieve_body` : (email_id)  
+`email_retrieve_body` : have access to sub accounts?  
 
 XML
 ===

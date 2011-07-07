@@ -5,7 +5,7 @@ module ETAPI
     def build_call(type, method, *args)
       
       options         = args.extract_options!
-      parse_response  = options[:parse_reponse] ||= false
+      parse_response  = options[:parse_reponse] ||= true
       
       if @api_method == :xml
         
