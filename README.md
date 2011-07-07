@@ -23,7 +23,7 @@ Subscriber Management `:xml`
 
 List Management `:xml`
 ---
-`list_retrieve_subscribers`  
+`list_retrieve_subscribers` : add s4 `:account_id`, add `:status`  
 
 Email Management `:xml`
 ---

@@ -19,7 +19,7 @@ module ETAPI
       }
       
       response = build_call("list", "retrieve_sub", {:parse_response => false})
-      Hash.from_xml(response)['exacttarget']['system']['list']['subscribers'] rescue false
+      Hash.from_xml(response)['exacttarget']['system']['list']['subscribers'].first[1] rescue false
       
     end
     
