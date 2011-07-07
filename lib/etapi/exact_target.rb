@@ -1,5 +1,6 @@
-require("etapi/calls/subscriber")
+require("etapi/calls/list")
 require("etapi/calls/tracking")
+require("etapi/calls/subscriber")
 
 module ETAPI
   
