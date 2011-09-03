@@ -13,6 +13,8 @@ module ETAPI
       return false unless check_required(required_options)
       
       # merge parameters and values
+      type        = "tracking"
+      method      = "retrieve"
       @parameters = {
         "search_type"   => "jobID",
         "sub_action"    => "summary",
@@ -20,7 +22,7 @@ module ETAPI
         "search_value2" => ""
       }
       
-      response = build_call("tracking", "retrieve", {:parse_response => false})
+      response = build_call(type, method, {:parse_response => false})
       Hash.from_xml(response)['exacttarget']['system']['tracking']['emailSummary'] rescue false
       
     end

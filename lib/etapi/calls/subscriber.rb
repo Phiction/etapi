@@ -12,8 +12,7 @@ module ETAPI
       @account_id       = options[:account_id]
       
       # check for required options
-      required_options = ["email"]
-      required_options += ["list_id"] if @api_method == :xml
+      required_options = ["email", "list_id"]
       return false unless check_required(required_options)
       
       # update options
@@ -169,8 +168,8 @@ module ETAPI
         "search_value2" => ""
       }
       
-      response = build_call("subscriber", "retrieve", {:parse_response => false})
-      Hash.from_xml(response)['exacttarget']['system']['subscriber'] rescue false
+      response = build_call("subscriber", "retrieve", {:ignore_parse => true})
+      Hash.from_xml(response)['exacttarget']['system']['subscriber'].first rescue false
       
     end
     

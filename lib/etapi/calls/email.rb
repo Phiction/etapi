@@ -13,6 +13,8 @@ module ETAPI
       return false unless check_required(required_options)
       
       # merge parameters and values
+      type        = "email"
+      method      = "retrieve"
       @parameters = {
         "search_type"   => "emailid",
         "sub_action"    => "htmlemail",
@@ -21,7 +23,7 @@ module ETAPI
         "search_value3" => "",
       }
       
-      response = build_call("email", "retrieve")
+      response = build_call(type, method)
       response.xpath("//htmlbody").text rescue false
       
     end

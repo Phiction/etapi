@@ -5,105 +5,64 @@ module ETAPI
     def build_call(type, method, *args)
       
       options         = args.extract_options!
-      parse_response  = options[:parse_reponse] ||= true
+      ignore_parse  = options[:ignore_parse] || false
       
-      if @api_method == :xml
-        
-        data = ""
-        xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
-        xml.instruct!
-        xml.exacttarget do
-          xml.authorization do
-            xml.username @username
-            xml.password @password
-          end
-          xml.system do
-            xml.system_name type
-            xml.action method
-            for parameter in @parameters
-              if parameter[0] == "values"
-                xml.values do
+      data = ""
+      xml = Builder::XmlMarkup.new(:target => data, :indent => 2)
+      xml.instruct!
+      xml.exacttarget do
+        xml.authorization do
+          xml.username @username
+          xml.password @password
+        end
+        xml.system do
+          xml.system_name type
+          xml.action method
+          for parameter in @parameters
+            if parameter[0] == "values"
+              xml.values do
+                parameter[1].each do |key, value|
+                  eval("xml.#{key.gsub(/\s/, '__')} '#{value}'")
+                end
+              end
+            else
+              if parameter[1].is_a?(Hash)
+                xml.tag!(parameter[0]) do
                   parameter[1].each do |key, value|
                     eval("xml.#{key.gsub(/\s/, '__')} '#{value}'")
                   end
                 end
               else
-                if parameter[1].is_a?(Hash)
-                  xml.tag!(parameter[0]) do
-                    parameter[1].each do |key, value|
-                      eval("xml.#{key.gsub(/\s/, '__')} '#{value}'")
-                    end
-                  end
-                else
-                  eval("xml.#{parameter[0]} '#{parameter[1]}'")
-                end
+                eval("xml.#{parameter[0]} '#{parameter[1]}'")
               end
             end
           end
         end
-        
-        data_encoded = "qf=xml&xml=" + url_encode(data)
-        response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
-        check_response(response)
-        parse_response ? Nokogiri::XML::Document.parse(response.read_body) : response.read_body
-        
-      elsif type == :soap
-        if true # wrap
-        #     session = Savon::Client.new(@api_wsdl)
-        #     session.wsse.username = @username
-        #     session.wsse.password = @password
-        #     
-        #     @attributes = @attributes.map{|name, value| {"wsdl:Name" => "#{name}", "wsdl:Value" => "#{(value.is_a?(Array)) ? value.join(',') : value}"} }
-        #   
-        #     soap_input = 'wsdl:CreateRequest'
-        #     if !@list_id.blank?
-        #       soap_body = {
-        #         'wsdl:Objects' => {
-        #           'wsdl:EmailAddress' => @email,
-        #           'wsdl:Attributes' => @attributes,
-        #           'wsdl:Lists' => {
-        #             'wsdl:ID' => @list_id,
-        #             'wsdl:Status' => 'Active'
-        #           },
-        #           :attributes! => {
-        #             'wsdl:Lists' => {'xsi:type' => 'wsdl:SubscriberList'}
-        #           }
-        #         
-        #         },
-        #         :attributes! => {
-        #           'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
-        #         }
-        #       }
-        #     else
-        #       soap_body = {
-        #         'wsdl:Objects' => {
-        #           'wsdl:EmailAddress' => @email,
-        #           'wsdl:Attributes' => @attributes
-        #         },
-        #         :attributes! => {
-        #           'wsdl:Objects' => {'xsi:type' => 'wsdl:Subscriber'}
-        #         }
-        #       }
-        #     end
-        #   
-        #     response = session.request(:create) do |soap|
-        #       soap.input = soap_input
-        #       soap.body  = soap_body
-        #     end
-        #   
-        #     response = Nokogiri::XML(response.http.body).remove_namespaces!
-        #   
-        #     check_response(response)
-        #   
-        #     subscriber_id     = response.xpath("//NewID").text.to_i
-        #     subscriber_msg    = response.xpath("//StatusMessage").text
-        #     
-        #     ETAPI.log("    Subscriber ID:      #{subscriber_id}\n    Subscriber Message: #{subscriber_msg}")
-        #   
-        #     return subscriber_id
-        end
       end
       
+      data_encoded = "qf=xml&xml=" + url_encode(data)
+      response = @api_url.post(@api_uri.path, data_encoded, @headers.merge('Content-length' => data_encoded.length.to_s))
+      check_response(response)
+      ignore_parse ? response.read_body : Nokogiri::XML::Document.parse(response.read_body)
+      
+    end
+    
+    private
+    
+    def print_xml(obj)
+      require "rexml/document"
+      doc = REXML::Document.new(obj.http.raw_body)
+      out = ""
+      doc.write(out, 1)
+      out
+    end
+    
+    def print_full_xml(obj)
+      require "rexml/document"
+      doc = REXML::Document.new(obj)
+      out = ""
+      doc.write(out, 1)
+      out
     end
     
   end

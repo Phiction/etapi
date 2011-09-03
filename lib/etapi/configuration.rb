@@ -1,6 +1,5 @@
 require("erb")
 require("uri")
-require("savon")
 require("logger")
 require("builder")
 require("nokogiri")
@@ -17,7 +16,6 @@ module ETAPI
     attr_accessor(
       :username,
       :password,
-      :api_method,
       :use_s4,
       :raise_errors,
       :log
