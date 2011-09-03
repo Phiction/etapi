@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["mcgrath.chris@gmail.com"]
   s.homepage    = %q{http://github.com/phiction/etapi}
   s.summary     = %q{Ruby Wrapper for Exact Target's APIs}
-  s.description = %q{This is an attempt to make integrating easier with Exact Target's XML and SOAP APIs.}
+  s.description = %q{This is an attempt to make integrating easier with Exact Target's XML APIs.}
 
   s.rubyforge_project = "etapi"
   
