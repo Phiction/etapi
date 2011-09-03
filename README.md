@@ -1,7 +1,7 @@
 ExactTarget API Wrapper
 =======================
 
-ETAPI is an ExactTarget API wrapper for both XML and SOAP methods.
+ETAPI is an ExactTarget API wrapper for XML calls.
 
 Documentation
 ------------
@@ -10,10 +10,7 @@ Documentation
 TODO
 ====
 
-`:soap`
----
-
-Subscriber Management `:xml`
+Subscriber Management
 ---
 `subscriber_add` : add s4 `:account_id`, add `:status`  
 `subscriber_edit` : add s4 `:account_id`, add `:status`  
@@ -24,11 +21,11 @@ Subscriber Management `:xml`
 `subscriber_retrieve_lists` : add s4 `:account_id`, add `:status`  
 `subscriber_unsubscribe_master` : multiple email addresses
 
-List Management `:xml`
+List Management
 ---
 `list_retrieve_subscribers` : add s4 `:account_id`, add `:status`  
 
-Email Management `:xml`
+Email Management
 ---
 `email_retrieve_body` : have access to sub accounts?  
 
